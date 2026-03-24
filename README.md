@@ -1,4 +1,4 @@
-# Playwright MCP Learning Sandbox by Michael Ruiz
+# Playwright MCP Lab Michael Ruiz
 
 ![Playwright](https://img.shields.io/badge/playwright-automation-blue.svg)
 ![TypeScript](https://img.shields.io/badge/typescript-strong-blue.svg)
@@ -7,7 +7,7 @@
 
 ## Overview
 
-This repository is a self-built AI Playwright playground I built from scratch to explore end-to-end automation with Playwright MCP.
+This repository is a self-built AI Playwright framework I built from scratch to explore end-to-end automation with Playwright MCP.
 
 - No templates copied; every script, test, and helper was created here.
 - Demonstrates a minimal real-world test repo (local practice page + fixture-driven tests).
