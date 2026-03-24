@@ -1,4 +1,4 @@
-# Playwright MCP Lab Michael Ruiz
+# Playwright MCP Lab
 
 ![Playwright](https://img.shields.io/badge/playwright-automation-blue.svg)
 ![TypeScript](https://img.shields.io/badge/typescript-strong-blue.svg)
