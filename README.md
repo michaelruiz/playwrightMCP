@@ -1,4 +1,4 @@
-# Playwright MCP Learning Sandbox (Built From Scratch)
+# Playwright MCP Learning Sandbox by Michael Ruiz
 
 ![Playwright](https://img.shields.io/badge/playwright-automation-blue.svg)
 ![TypeScript](https://img.shields.io/badge/typescript-strong-blue.svg)
@@ -26,6 +26,7 @@ This repository is a self-built AI Playwright playground I built from scratch to
 ```bash
 npm install
 npx playwright install chromium
+https://github.com/mcp/microsoft/playwright-mcp
 ```
 
 ### 2) Start local practice app
