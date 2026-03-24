@@ -1,5 +1,8 @@
 # Playwright MCP Lab
 
+<img width="1365" height="1024" alt="ChatGPT Image Mar 24, 2026 at 04_25_29 PM" src="https://github.com/user-attachments/assets/6acebfb0-3d01-46b4-b984-43afabcd3542" />
+
+
 Using MCP-driven browser exploration to build structured Playwright tests.
 
 ![Playwright](https://img.shields.io/badge/playwright-automation-blue.svg)
