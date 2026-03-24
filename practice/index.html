@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Signal Lab Practice Board</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231d2330'/%3E%3Ccircle cx='24' cy='24' r='8' fill='%23c65f35'/%3E%3Ccircle cx='40' cy='24' r='8' fill='%23f5efe4'/%3E%3Cpath d='M16 42c6-7 12-10 18-10s12 3 18 10' fill='none' stroke='%232f6e61' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E"
+    />
+    <style>
+      :root {
+        --paper: #f5efe4;
+        --paper-strong: #efe3d1;
+        --ink: #1d2330;
+        --muted: #5f6779;
+        --accent: #c65f35;
+        --accent-deep: #8f3e1d;
+        --leaf: #2f6e61;
+        --panel: rgba(255, 250, 242, 0.82);
+        --line: rgba(29, 35, 48, 0.12);
+        --shadow: 0 20px 60px rgba(32, 28, 24, 0.14);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Avenir Next", "Trebuchet MS", Verdana, sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at top left, rgba(198, 95, 53, 0.22), transparent 28%),
+          radial-gradient(circle at top right, rgba(47, 110, 97, 0.18), transparent 34%),
+          linear-gradient(180deg, #f8f2e7 0%, #ede0cb 100%);
+      }
+
+      body::before,
+      body::after {
+        content: "";
+        position: fixed;
+        border-radius: 999px;
+        filter: blur(6px);
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      body::before {
+        width: 16rem;
+        height: 16rem;
+        left: -4rem;
+        top: 6rem;
+        background: rgba(198, 95, 53, 0.16);
+      }
+
+      body::after {
+        width: 20rem;
+        height: 20rem;
+        right: -6rem;
+        bottom: 5rem;
+        background: rgba(47, 110, 97, 0.14);
+      }
+
+      .shell {
+        position: relative;
+        z-index: 1;
+        width: min(1120px, calc(100% - 2rem));
+        margin: 0 auto;
+        padding: 2rem 0 3rem;
+      }
+
+      .hero {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: 1.4fr 1fr;
+        align-items: end;
+        margin-bottom: 1.5rem;
+      }
+
+      .hero-copy h1 {
+        margin: 0 0 0.5rem;
+        font-family: Baskerville, "Palatino Linotype", Georgia, serif;
+        font-size: clamp(2.7rem, 5vw, 4.8rem);
+        font-weight: 600;
+        line-height: 0.94;
+        letter-spacing: -0.04em;
+      }
+
+      .hero-copy p {
+        max-width: 42rem;
+        font-size: 1.02rem;
+        line-height: 1.6;
+        color: var(--muted);
+        margin: 0;
+      }
+
+      .hero-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.9rem;
+      }
+
+      .stat,
+      .panel,
+      .card {
+        backdrop-filter: blur(10px);
+        background: var(--panel);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: var(--shadow);
+        border-radius: 22px;
+      }
+
+      .stat {
+        padding: 1rem;
+      }
+
+      .stat-label {
+        display: block;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--muted);
+        margin-bottom: 0.45rem;
+      }
+
+      .stat-value {
+        font-size: 1.65rem;
+        font-weight: 700;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 1rem;
+      }
+
+      .stack {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .panel {
+        padding: 1.2rem;
+      }
+
+      .panel h2 {
+        margin: 0 0 0.9rem;
+        font-family: Baskerville, "Palatino Linotype", Georgia, serif;
+        font-size: 1.6rem;
+      }
+
+      .eyebrow {
+        margin: 0 0 0.45rem;
+        color: var(--accent-deep);
+        font-size: 0.78rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .subtle {
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .search-row,
+      .task-row,
+      .form-grid,
+      .toggle-row {
+        display: grid;
+        gap: 0.75rem;
+      }
+
+      .search-row {
+        grid-template-columns: 1fr auto;
+        margin-bottom: 1rem;
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.85rem;
+      }
+
+      .card {
+        padding: 1rem;
+        border: 1px solid var(--line);
+      }
+
+      .card h3 {
+        margin: 0 0 0.35rem;
+        font-size: 1rem;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.28rem 0.55rem;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        background: rgba(47, 110, 97, 0.11);
+        color: var(--leaf);
+        margin-bottom: 0.7rem;
+      }
+
+      label {
+        display: block;
+        font-size: 0.92rem;
+        font-weight: 600;
+        margin-bottom: 0.4rem;
+      }
+
+      input,
+      select,
+      button,
+      textarea {
+        width: 100%;
+        border-radius: 14px;
+        border: 1px solid rgba(29, 35, 48, 0.14);
+        padding: 0.82rem 0.92rem;
+        font: inherit;
+      }
+
+      input,
+      select,
+      textarea {
+        background: rgba(255, 255, 255, 0.9);
+      }
+
+      button {
+        cursor: pointer;
+        border: none;
+        background: var(--accent);
+        color: #fff9f1;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        transition: transform 140ms ease, background 140ms ease;
+      }
+
+      button:hover {
+        transform: translateY(-1px);
+        background: var(--accent-deep);
+      }
+
+      button.secondary {
+        background: rgba(29, 35, 48, 0.08);
+        color: var(--ink);
+      }
+
+      .form-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .form-grid .full {
+        grid-column: 1 / -1;
+      }
+
+      .inline-note {
+        margin: 0.75rem 0 0;
+        font-size: 0.92rem;
+        color: var(--muted);
+      }
+
+      .status {
+        margin-top: 0.9rem;
+        padding: 0.8rem 0.9rem;
+        border-radius: 14px;
+        background: rgba(47, 110, 97, 0.1);
+        color: var(--leaf);
+        min-height: 3rem;
+      }
+
+      .task-row {
+        grid-template-columns: 1fr auto;
+      }
+
+      ul {
+        margin: 0.9rem 0 0;
+        padding-left: 1.2rem;
+      }
+
+      li + li {
+        margin-top: 0.4rem;
+      }
+
+      .toggle-row {
+        margin-top: 0.7rem;
+      }
+
+      .toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 0.75rem 0.85rem;
+        border-radius: 14px;
+        background: rgba(29, 35, 48, 0.05);
+      }
+
+      .toggle label {
+        margin: 0;
+        font-weight: 600;
+      }
+
+      .toggle input {
+        width: 1.1rem;
+        height: 1.1rem;
+        margin: 0;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 1rem;
+      }
+
+      .actions button {
+        width: auto;
+        min-width: 10rem;
+      }
+
+      dialog {
+        width: min(32rem, calc(100% - 2rem));
+        border: none;
+        border-radius: 24px;
+        padding: 0;
+        box-shadow: 0 24px 80px rgba(18, 16, 14, 0.32);
+      }
+
+      dialog::backdrop {
+        background: rgba(16, 14, 12, 0.42);
+        backdrop-filter: blur(3px);
+      }
+
+      .dialog-body {
+        padding: 1.3rem;
+      }
+
+      .dialog-body h2 {
+        margin-top: 0;
+      }
+
+      .footer-note {
+        margin-top: 1rem;
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      @media (max-width: 920px) {
+        .hero,
+        .layout,
+        .cards,
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-stats {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 640px) {
+        .shell {
+          width: min(100% - 1rem, 1120px);
+          padding-top: 1rem;
+        }
+
+        .hero-stats,
+        .search-row,
+        .task-row {
+          grid-template-columns: 1fr;
+        }
+
+        .actions button {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero" aria-label="Signal Lab intro">
+        <div class="hero-copy">
+          <p class="eyebrow">Playwright MCP Practice</p>
+          <h1>Signal Lab Practice Board</h1>
+          <p>
+            This local page is built for browser automation practice. You can filter
+            cards, submit forms, add tasks, toggle settings, and open a dialog without
+            depending on a changing external site.
+          </p>
+        </div>
+        <div class="hero-stats" aria-label="Quick stats">
+          <article class="stat">
+            <span class="stat-label">Visible Cards</span>
+            <span class="stat-value" id="visible-card-count">3</span>
+          </article>
+          <article class="stat">
+            <span class="stat-label">Tasks</span>
+            <span class="stat-value" id="task-count">2</span>
+          </article>
+          <article class="stat">
+            <span class="stat-label">Mode</span>
+            <span class="stat-value" id="mode-label">Calm</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="layout">
+        <div class="stack">
+          <section class="panel" aria-labelledby="lab-board-heading">
+            <p class="eyebrow">Explore</p>
+            <h2 id="lab-board-heading">Card Filter</h2>
+            <p class="subtle">
+              Search for a keyword like <strong>roadmap</strong>, <strong>metrics</strong>,
+              or <strong>launch</strong> to reduce the visible cards.
+            </p>
+            <div class="search-row">
+              <div>
+                <label for="card-search">Search cards</label>
+                <input
+                  id="card-search"
+                  name="card-search"
+                  type="search"
+                  placeholder="Try roadmap"
+                />
+              </div>
+              <div>
+                <label for="search-button">Apply filter</label>
+                <button id="search-button" type="button">Filter Cards</button>
+              </div>
+            </div>
+
+            <div class="cards" id="card-grid">
+              <article class="card" data-card-text="roadmap launch priorities">
+                <span class="tag">Roadmap</span>
+                <h3>Launch Outline</h3>
+                <p class="subtle">
+                  Finalize launch priorities and confirm which milestones fit the next sprint.
+                </p>
+              </article>
+              <article class="card" data-card-text="metrics dashboard weekly trends">
+                <span class="tag">Metrics</span>
+                <h3>Trend Review</h3>
+                <p class="subtle">
+                  Compare weekly dashboard movement and flag the most surprising changes.
+                </p>
+              </article>
+              <article class="card" data-card-text="research interviews notes synthesis">
+                <span class="tag">Research</span>
+                <h3>Interview Notes</h3>
+                <p class="subtle">
+                  Turn raw interviews into themes that the team can use in planning.
+                </p>
+              </article>
+            </div>
+          </section>
+
+          <section class="panel" aria-labelledby="login-heading">
+            <p class="eyebrow">Forms</p>
+            <h2 id="login-heading">Quick Sign-In</h2>
+            <form id="login-form">
+              <div class="form-grid">
+                <div>
+                  <label for="email">Email</label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="demo@example.com"
+                    autocomplete="email"
+                    required
+                  />
+                </div>
+                <div>
+                  <label for="password">Password</label>
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    placeholder="orbit123"
+                    autocomplete="current-password"
+                    required
+                  />
+                </div>
+                <div class="full">
+                  <label for="plan">Workspace Plan</label>
+                  <select id="plan" name="plan">
+                    <option>Starter</option>
+                    <option>Team</option>
+                    <option>Studio</option>
+                  </select>
+                </div>
+                <div class="full">
+                  <label for="notes">Notes</label>
+                  <textarea id="notes" name="notes" rows="3" placeholder="Optional practice text"></textarea>
+                </div>
+              </div>
+              <p class="inline-note">
+                Tip: after submitting, check the status panel for the confirmation text.
+              </p>
+              <div class="actions">
+                <button id="submit-sign-in" type="submit">Submit Sign-In</button>
+                <button class="secondary" id="reset-form" type="button">Reset Form</button>
+              </div>
+            </form>
+            <div class="status" id="sign-in-status" aria-live="polite">
+              Waiting for sign-in input.
+            </div>
+          </section>
+        </div>
+
+        <div class="stack">
+          <section class="panel" aria-labelledby="task-heading">
+            <p class="eyebrow">Lists</p>
+            <h2 id="task-heading">Task Board</h2>
+            <div class="task-row">
+              <div>
+                <label for="task-input">New task</label>
+                <input id="task-input" name="task-input" type="text" placeholder="Review roadmap" />
+              </div>
+              <div>
+                <label for="add-task">Add item</label>
+                <button id="add-task" type="button">Add Task</button>
+              </div>
+            </div>
+            <ul id="task-list">
+              <li>Draft weekly summary</li>
+              <li>Confirm release notes</li>
+            </ul>
+          </section>
+
+          <section class="panel" aria-labelledby="preferences-heading">
+            <p class="eyebrow">State</p>
+            <h2 id="preferences-heading">Preferences</h2>
+            <p class="subtle">These toggles update the page state so you can verify changes.</p>
+            <div class="toggle-row">
+              <div class="toggle">
+                <label for="focus-mode">Focus mode</label>
+                <input id="focus-mode" name="focus-mode" type="checkbox" />
+              </div>
+              <div class="toggle">
+                <label for="daily-digest">Daily digest</label>
+                <input id="daily-digest" name="daily-digest" type="checkbox" checked />
+              </div>
+              <div class="toggle">
+                <label for="auto-archive">Auto archive</label>
+                <input id="auto-archive" name="auto-archive" type="checkbox" />
+              </div>
+            </div>
+            <div class="status" id="preferences-status" aria-live="polite">
+              Daily digest is enabled. Focus mode is off.
+            </div>
+          </section>
+
+          <section class="panel" aria-labelledby="dialog-heading">
+            <p class="eyebrow">Dialogs</p>
+            <h2 id="dialog-heading">Release Notes</h2>
+            <p class="subtle">
+              Open the dialog to practice modal interactions and state verification.
+            </p>
+            <div class="actions">
+              <button id="open-dialog" type="button">Open Release Notes</button>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <p class="footer-note">
+        Built as a stable practice page for Playwright MCP exploration.
+      </p>
+    </main>
+
+    <dialog id="release-dialog" aria-labelledby="release-dialog-title">
+      <div class="dialog-body">
+        <p class="eyebrow">March Release</p>
+        <h2 id="release-dialog-title">Release Notes Summary</h2>
+        <p>
+          The latest update improves card filtering, makes status messages clearer, and adds a
+          local practice flow for browser automation demos.
+        </p>
+        <ul>
+          <li>Search now updates the visible card count immediately.</li>
+          <li>Task creation updates the board without a page refresh.</li>
+          <li>Preference toggles write friendly confirmation text.</li>
+        </ul>
+        <div class="actions">
+          <button id="close-dialog" type="button">Close Release Notes</button>
+        </div>
+      </div>
+    </dialog>
+
+    <script>
+      const cardSearch = document.getElementById("card-search");
+      const searchButton = document.getElementById("search-button");
+      const cardGrid = document.getElementById("card-grid");
+      const visibleCardCount = document.getElementById("visible-card-count");
+      const loginForm = document.getElementById("login-form");
+      const resetFormButton = document.getElementById("reset-form");
+      const signInStatus = document.getElementById("sign-in-status");
+      const taskInput = document.getElementById("task-input");
+      const addTaskButton = document.getElementById("add-task");
+      const taskList = document.getElementById("task-list");
+      const taskCount = document.getElementById("task-count");
+      const focusMode = document.getElementById("focus-mode");
+      const dailyDigest = document.getElementById("daily-digest");
+      const autoArchive = document.getElementById("auto-archive");
+      const preferencesStatus = document.getElementById("preferences-status");
+      const modeLabel = document.getElementById("mode-label");
+      const openDialogButton = document.getElementById("open-dialog");
+      const closeDialogButton = document.getElementById("close-dialog");
+      const releaseDialog = document.getElementById("release-dialog");
+
+      function updateVisibleCardCount() {
+        const visibleCards = Array.from(cardGrid.children).filter(
+          (card) => !card.hidden,
+        ).length;
+        visibleCardCount.textContent = String(visibleCards);
+      }
+
+      function filterCards() {
+        const query = cardSearch.value.trim().toLowerCase();
+        Array.from(cardGrid.children).forEach((card) => {
+          const haystack = card.getAttribute("data-card-text") || "";
+          card.hidden = query ? !haystack.includes(query) : false;
+        });
+        updateVisibleCardCount();
+      }
+
+      function updateTaskCount() {
+        taskCount.textContent = String(taskList.children.length);
+      }
+
+      function updatePreferencesStatus() {
+        const focusText = focusMode.checked ? "on" : "off";
+        const digestText = dailyDigest.checked ? "enabled" : "disabled";
+        const archiveText = autoArchive.checked ? "Auto archive is on." : "Auto archive is off.";
+
+        preferencesStatus.textContent =
+          "Daily digest is " + digestText + ". Focus mode is " + focusText + ". " + archiveText;
+        modeLabel.textContent = focusMode.checked ? "Focus" : "Calm";
+      }
+
+      searchButton.addEventListener("click", filterCards);
+      cardSearch.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          filterCards();
+        }
+      });
+
+      loginForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const formData = new FormData(loginForm);
+        const email = String(formData.get("email") || "").trim();
+        const plan = String(formData.get("plan") || "").trim();
+
+        signInStatus.textContent =
+          "Signed in as " + email + " on the " + plan + " plan.";
+      });
+
+      resetFormButton.addEventListener("click", () => {
+        loginForm.reset();
+        signInStatus.textContent = "Form reset. Waiting for sign-in input.";
+      });
+
+      addTaskButton.addEventListener("click", () => {
+        const value = taskInput.value.trim();
+        if (!value) {
+          taskInput.focus();
+          return;
+        }
+
+        const item = document.createElement("li");
+        item.textContent = value;
+        taskList.appendChild(item);
+        taskInput.value = "";
+        updateTaskCount();
+      });
+
+      [focusMode, dailyDigest, autoArchive].forEach((element) => {
+        element.addEventListener("change", updatePreferencesStatus);
+      });
+
+      openDialogButton.addEventListener("click", () => {
+        releaseDialog.showModal();
+      });
+
+      closeDialogButton.addEventListener("click", () => {
+        releaseDialog.close();
+      });
+
+      updateVisibleCardCount();
+      updateTaskCount();
+      updatePreferencesStatus();
+    </script>
+  </body>
+</html>

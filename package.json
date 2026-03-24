@@ -1,0 +1,26 @@
+{
+  "name": "playwright-mcp-learning-sandbox",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "serve:practice": "tsx scripts/serve-practice.ts",
+    "browsers:install": "playwright install chromium",
+    "browsers:install:all": "playwright install chromium firefox webkit",
+    "typecheck": "tsc --noEmit",
+    "test": "playwright test",
+    "test:cross-browser": "tsx scripts/run-playwright.ts --cross-browser",
+    "test:mobile": "tsx scripts/run-playwright.ts --mobile",
+    "test:all": "tsx scripts/run-playwright.ts --cross-browser --mobile",
+    "test:report-demo": "tsx scripts/run-playwright.ts --report-demo tests/report-demo.failure.spec.ts",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.58.2",
+    "@types/node": "24.5.2",
+    "tsx": "4.20.5",
+    "typescript": "5.9.2"
+  }
+}
