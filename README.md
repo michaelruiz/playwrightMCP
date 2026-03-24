@@ -1,5 +1,7 @@
 # Playwright MCP Lab
 
+Using MCP-driven browser exploration to build structured Playwright tests.
+
 ![Playwright](https://img.shields.io/badge/playwright-automation-blue.svg)
 ![TypeScript](https://img.shields.io/badge/typescript-strong-blue.svg)
 ![Status](https://img.shields.io/badge/status-ready-green.svg)
@@ -7,17 +9,17 @@
 
 ## Overview
 
-This repository is a self-built AI Playwright framework I built from scratch to explore end-to-end automation with Playwright MCP.
+This repository is a TypeScript Playwright lab for learning how MCP-assisted browser exploration can become maintainable end-to-end tests.
 
-- No templates copied; every script, test, and helper was created here.
-- Demonstrates a minimal real-world test repo (local practice page + fixture-driven tests).
-- Targets reliable cross-browser regression checks using Playwright with local asset serving.
+- Includes a local practice app for safe UI exploration and repeatable automation exercises.
+- Demonstrates a clean test structure with page objects, fixtures, typed config, and CI.
+- Shows how MCP discovery can turn into stable Playwright assertions, reports, and workflows.
 
 ## Supported versions
 
-- Node.js: 18.x or 20.x recommended
+- Node.js: 18+ supported, 20.x or newer recommended
 - npm: 10.x or 11.x
-- Playwright: `^1.40.0` (see `package.json`)
+- Playwright: `1.58.2` (pinned in `package.json`)
 
 ## Quick Start
 
@@ -26,7 +28,6 @@ This repository is a self-built AI Playwright framework I built from scratch to 
 ```bash
 npm install
 npx playwright install chromium
-https://github.com/mcp/microsoft/playwright-mcp
 ```
 
 ### 2) Start local practice app
@@ -75,11 +76,11 @@ npx playwright show-report
 
 ## Why this repo exists
 
-- To learn Playwright MCP incremental design: first using MCP prompts, later capturing behaviors as typed tests.
-- To maintain browser-agnostic CIs with consistent element selectors (roles/labels over brittle CSS ids).
-- To prove a runnable sandbox that can be audited by any clone/fork.
+- To practice the workflow from MCP browser exploration to durable Playwright tests.
+- To show a small but opinionated QA repo structure with TypeScript, fixtures, POM, CI, and reporting.
+- To share a reviewable project that other QA engineers can inspect, critique, and build on.
 
-## From-Scratch story (what I built)
+## How the lab evolved
 
 1. Created `practice/index.html` and local UI flows (task cards, filters, dialogs).
 2. Added TypeScript + Playwright config and project scripts.
@@ -102,29 +103,24 @@ npx playwright show-report
 
 - Use `getByRole`, `getByLabelText`, and visible text for stable selectors.
 - Avoid `nth-child` selectors or fixed DOM positions.
-- Use explicit waits:
+- Assert on visible state changes that matter:
 
-\`\`\`ts
-await expect(practicePage.snackbar).toHaveText(/success/i);
-\`\`\`
+```ts
+await practicePage.signIn({
+  email: "demo@example.com",
+  password: "orbit123",
+  plan: "Team",
+});
+await expect(practicePage.signInStatus).toHaveText(
+  "Signed in as demo@example.com on the Team plan.",
+);
+```
 
 - CI-friendly run:
 
-\`\`\`bash
+```bash
 npx playwright test --retries=2 --workers=1
-\`\`\`
-
-## Local env configuration
-
-Optionally define in `.env` (not committed):
-
-\`\`\`bash
-PRACTICE_LOGIN_EMAIL=demo@example.com
-PRACTICE_LOGIN_PASSWORD=orbit123
-PRACTICE_LOGIN_PLAN=Team
-PW_CROSS_BROWSER=0
-PW_MOBILE=0
-\`\`\`
+```
 
 ## Local env configuration
 
@@ -155,10 +151,16 @@ Load order:
 
 ```ts
 await practicePage.goto();
-await practicePage.signIn('demo@example.com', 'orbit123');
-await expect(practicePage.notification).toHaveText(/Welcome/i);
-await practicePage.addTask('Ship notes');
-await expect(practicePage.tasks).toHaveCount(3);
+await practicePage.signIn({
+  email: "demo@example.com",
+  password: "orbit123",
+  plan: "Team",
+});
+await expect(practicePage.signInStatus).toHaveText(
+  "Signed in as demo@example.com on the Team plan.",
+);
+await practicePage.addTask("Ship notes");
+await expect(practicePage.taskCount).toHaveText("3");
 ``` 
 
 ## Scripts

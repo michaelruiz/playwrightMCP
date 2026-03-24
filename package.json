@@ -1,5 +1,6 @@
 {
-  "name": "playwright-mcp-learning-sandbox",
+  "name": "playwright-mcp-lab",
+  "description": "Use MCP-driven browser exploration to build structured Playwright tests.",
   "version": "0.1.0",
   "private": true,
   "type": "module",
