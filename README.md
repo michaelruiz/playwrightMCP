@@ -9,7 +9,7 @@ Using MCP-driven browser exploration to build structured Playwright tests.
 
 ## Overview
 
-This repository is a TypeScript Playwright lab for learning how MCP-assisted browser exploration can become maintainable end-to-end tests.
+Using MCP-driven browser exploration to build structured Playwright tests.
 
 - Includes a local practice app for safe UI exploration and repeatable automation exercises.
 - Demonstrates a clean test structure with page objects, fixtures, typed config, and CI.
