@@ -24,3 +24,16 @@ test.describe("Signal Lab practice page", () => {
     });
   });
 });
+
+test("sign-in defaults to the Starter plan when no plan is provided", async ({
+  practicePage,
+}) => {
+  await practicePage.goto();
+  await practicePage.signIn({
+    email: "wrong@example.com",
+    password: "badpassword",
+  });
+  await expect(practicePage.signInStatus).toHaveText(
+    "Signed in as wrong@example.com on the Starter plan.",
+  );
+});

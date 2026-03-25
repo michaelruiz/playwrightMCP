@@ -16,12 +16,22 @@
     "test:report-demo": "tsx scripts/run-playwright.ts --report-demo tests/report-demo.failure.spec.ts",
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui",
-    "test:debug": "playwright test --debug"
+    "test:debug": "playwright test --debug",
+    "test:coverage": "playwright test --coverage",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "devDependencies": {
+    "@eslint/js": "^9.36.0",
     "@playwright/test": "1.58.2",
     "@types/node": "24.5.2",
+    "eslint": "^9.36.0",
+    "globals": "^16.4.0",
+    "prettier": "^3.8.1",
     "tsx": "4.20.5",
+    "typescript-eslint": "^8.57.2",
     "typescript": "5.9.2"
   }
 }

@@ -1,8 +1,11 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 
-import type { LoginCredentials } from "../config/environment.ts";
+import type { PracticePlan } from "../config/environment.ts";
 
-export interface SignInOptions extends LoginCredentials {
+export interface SignInOptions {
+  email: string;
+  password: string;
+  plan?: PracticePlan;
   notes?: string;
 }
 

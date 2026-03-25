@@ -135,6 +135,8 @@ export const test = base.extend<PracticeFixtures & PracticeWorkerFixtures>({
     await use(practicePage);
   },
 
+  // Playwright fixtures require destructured args in this position.
+  // eslint-disable-next-line no-empty-pattern
   loginCredentials: async ({}, use) => {
     await use(getLoginCredentials());
   },

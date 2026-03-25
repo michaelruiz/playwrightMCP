@@ -170,6 +170,8 @@ await expect(practicePage.taskCount).toHaveText("3");
 
 - `npm run serve:practice`: serve practice page locally
 - `npm run test`: run full test suite
+- `npm run lint`: run the ESLint 9 flat-config lint pass
+- `npm run lint:fix`: apply ESLint auto-fixes
 - `npm run typecheck`: TS type check
 - `npm run test:cross-browser`: execute all browser projects
 - `npm run test:mobile`: execute mobile emulation tests
@@ -178,7 +180,7 @@ await expect(practicePage.taskCount).toHaveText("3");
 
 - `npm test`
 - `npm run typecheck`
-- `npm run lint` (if available)
+- `npm run lint`
 - `npx playwright show-report`
 
 ## Contributing
