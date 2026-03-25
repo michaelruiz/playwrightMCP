@@ -13,6 +13,7 @@ const reporter: ReporterDescription[] = [
   ["list"],
   ["html", { open: "never" }],
   ["json", { outputFile: "test-results/report.json" }],
+  ["allure-playwright", { outputFolder: "allure-results" }],
 ];
 
 if (process.env.GITHUB_ACTIONS) {

@@ -65,6 +65,13 @@ npx playwright show-report
 ```
 > If badge shows 404, run `npm test` once and re-open this README or GitHub page.
 
+Generate an Allure report from the latest test run:
+
+```bash
+npm run report:allure
+npm run report:allure:open
+```
+
 ## What is in this repo
 
 - `pages/practice-page.ts`: page object for reusable actions
@@ -175,6 +182,8 @@ await expect(practicePage.taskCount).toHaveText("3");
 - `npm run typecheck`: TS type check
 - `npm run test:cross-browser`: execute all browser projects
 - `npm run test:mobile`: execute mobile emulation tests
+- `npm run report:allure`: generate a local Allure HTML report from `allure-results`
+- `npm run report:allure:open`: open the generated Allure report
 
 ## Pre-PR checklist
 
