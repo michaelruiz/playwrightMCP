@@ -12,6 +12,8 @@ export default defineConfig(
   globalIgnores([
     "node_modules/**",
     "playwright-report/**",
+    "allure-report/**",
+    "allure-results/**",
     "test-results/**",
     "output/**",
     ".playwright-cli/**",
