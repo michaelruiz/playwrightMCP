@@ -88,7 +88,7 @@ npm run report:allure:open
 - `tests/practice-api.spec.ts`: API-layer coverage using Playwright's `request` fixture
 - `tests/practice-accessibility.spec.ts`: accessibility checks powered by `axe-core`
 - `tests/practice-visual.spec.ts`: Chromium visual regression coverage
-- `tests/__screenshots__/`: committed baseline snapshots for visual assertions
+- `tests/practice-visual.spec.ts-snapshots/`: committed macOS and Linux baseline snapshots for visual assertions
 - `config/environment.ts`: runtime environment variables + validation
 - `config/practice-data.ts`: shared practice data and state builders used by UI + API
 - `scripts/serve-practice.ts`: local practice server with both static pages and JSON endpoints

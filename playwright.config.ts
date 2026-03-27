@@ -78,7 +78,6 @@ const config: PlaywrightTestConfig = defineConfig({
     toHaveScreenshot: {
       animations: "disabled",
       caret: "hide",
-      pathTemplate: "{testDir}/__screenshots__/{testFilePath}/{arg}{ext}",
       scale: "css",
     },
   },
