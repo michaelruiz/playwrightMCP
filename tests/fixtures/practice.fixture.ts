@@ -21,6 +21,7 @@ export interface PracticeFixtures {
 type PracticeWorkerFixtures = {
   captureConsoleOnFailure: void;
   captureNetworkOnFailure: void;
+  resetPracticeState: void;
 };
 
 function slugifyTitle(value: string): string {
@@ -129,7 +130,17 @@ export const test = base.extend<PracticeFixtures & PracticeWorkerFixtures>({
     { auto: true },
   ],
 
-  practicePage: async ({ page }, use) => {
+  resetPracticeState: [
+    async ({ request }, use) => {
+      const response = await request.post("/api/test/reset");
+      expect(response.ok()).toBeTruthy();
+      await use();
+    },
+    { auto: true },
+  ],
+
+  practicePage: async ({ page, resetPracticeState }, use) => {
+    void resetPracticeState;
     const practicePage = new PracticePage(page);
     await practicePage.goto();
     await use(practicePage);

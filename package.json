@@ -13,6 +13,12 @@
     "test:cross-browser": "tsx scripts/run-playwright.ts --cross-browser",
     "test:mobile": "tsx scripts/run-playwright.ts --mobile",
     "test:all": "tsx scripts/run-playwright.ts --cross-browser --mobile",
+    "test:smoke": "playwright test --grep @smoke",
+    "test:regression": "playwright test --grep @regression",
+    "test:api": "playwright test --grep @api",
+    "test:a11y": "playwright test --project=chromium --grep @a11y",
+    "test:visual": "playwright test --project=chromium --grep @visual",
+    "test:visual:update": "playwright test --project=chromium --grep @visual --update-snapshots",
     "test:report-demo": "tsx scripts/run-playwright.ts --report-demo tests/report-demo.failure.spec.ts",
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui",
@@ -24,6 +30,7 @@
     "format:check": "prettier --check ."
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.1",
     "@eslint/js": "^9.36.0",
     "@playwright/test": "1.58.2",
     "@types/node": "24.5.2",
@@ -31,7 +38,7 @@
     "globals": "^16.4.0",
     "prettier": "^3.8.1",
     "tsx": "4.20.5",
-    "typescript-eslint": "^8.57.2",
-    "typescript": "5.9.2"
+    "typescript": "5.9.2",
+    "typescript-eslint": "^8.57.2"
   }
 }

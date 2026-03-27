@@ -1,6 +1,6 @@
 import { expect, test } from "./fixtures/practice.fixture.js";
 
-test.describe("Playwright report demo", () => {
+test.describe("Playwright report demo", { tag: ["@demo", "@reporting"] }, () => {
   test.skip(
     !process.env.RUN_REPORT_DEMO,
     "This example is intentionally failing and only runs through the report demo command.",

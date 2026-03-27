@@ -11,7 +11,9 @@ export interface SignInOptions {
 
 export class PracticePage {
   readonly page: Page;
+  readonly shell: Locator;
   readonly heading: Locator;
+  readonly cardGrid: Locator;
   readonly visibleCardCount: Locator;
   readonly taskCount: Locator;
   readonly modeLabel: Locator;
@@ -22,7 +24,9 @@ export class PracticePage {
 
   constructor(page: Page) {
     this.page = page;
+    this.shell = page.locator("main.shell");
     this.heading = page.getByRole("heading", { name: "Signal Lab Practice Board" });
+    this.cardGrid = page.locator("#card-grid");
     this.visibleCardCount = page.locator("#visible-card-count");
     this.taskCount = page.locator("#task-count");
     this.modeLabel = page.locator("#mode-label");
@@ -35,6 +39,7 @@ export class PracticePage {
   async goto(): Promise<void> {
     await this.page.goto("/practice/");
     await expect(this.heading).toBeVisible();
+    await expect(this.shell).toHaveAttribute("data-practice-ready", "true");
   }
 
   async signIn({
@@ -81,6 +86,10 @@ export class PracticePage {
 
   cardHeading(name: string): Locator {
     return this.page.getByRole("heading", { name });
+  }
+
+  taskItem(name: string): Locator {
+    return this.taskItems.filter({ hasText: name });
   }
 
   releaseDialogText(text: string): Locator {

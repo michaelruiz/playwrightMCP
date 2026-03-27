@@ -1,7 +1,7 @@
 import { expect, test } from "./fixtures/practice.fixture.js";
 
-test.describe("Signal Lab practice workflows", () => {
-  test("filtering cards narrows the results and updates the visible count", async ({
+test.describe("Signal Lab practice workflows", { tag: ["@ui", "@regression"] }, () => {
+  test("filtering cards narrows the results and updates the visible count", { tag: "@smoke" }, async ({
     practicePage,
     reportStep,
   }) => {
@@ -17,7 +17,7 @@ test.describe("Signal Lab practice workflows", () => {
     });
   });
 
-  test("adding a task updates the task count and task list", async ({
+  test("adding a task updates the task count and task list", { tag: "@smoke" }, async ({
     practicePage,
     reportStep,
   }) => {

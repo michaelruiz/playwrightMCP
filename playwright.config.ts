@@ -73,6 +73,14 @@ const config: PlaywrightTestConfig = defineConfig({
   retries: process.env.CI ? 2 : 0,
   ...(process.env.CI ? { workers: 2 } : {}),
   reporter,
+  expect: {
+    toHaveScreenshot: {
+      animations: "disabled",
+      caret: "hide",
+      pathTemplate: "{testDir}/__screenshots__/{testFilePath}/{arg}{ext}",
+      scale: "css",
+    },
+  },
   use: {
     baseURL: runtime.baseURL,
     trace: process.env.CI ? "on-first-retry" : "retain-on-failure",

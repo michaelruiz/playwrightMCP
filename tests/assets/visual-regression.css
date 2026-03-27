@@ -1,0 +1,37 @@
+*,
+*::before,
+*::after {
+  animation: none !important;
+  caret-color: transparent !important;
+  transition: none !important;
+}
+
+.eyebrow,
+h1,
+h2,
+h3,
+p,
+label,
+li,
+button,
+input,
+select,
+textarea,
+.tag,
+.stat-label,
+.stat-value,
+.status {
+  color: transparent !important;
+  text-shadow: none !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+ul {
+  list-style-position: inside;
+}

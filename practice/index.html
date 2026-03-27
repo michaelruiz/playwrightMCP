@@ -14,8 +14,8 @@
         --paper-strong: #efe3d1;
         --ink: #1d2330;
         --muted: #5f6779;
-        --accent: #c65f35;
-        --accent-deep: #8f3e1d;
+        --accent: #8f3e1d;
+        --accent-deep: #6f2b12;
         --leaf: #2f6e61;
         --panel: rgba(255, 250, 242, 0.82);
         --line: rgba(29, 35, 48, 0.12);
@@ -382,7 +382,7 @@
     </style>
   </head>
   <body>
-    <main class="shell">
+    <main class="shell" data-practice-ready="false" aria-busy="true">
       <section class="hero" aria-label="Signal Lab intro">
         <div class="hero-copy">
           <p class="eyebrow">Playwright MCP Practice</p>
@@ -434,29 +434,7 @@
               </div>
             </div>
 
-            <div class="cards" id="card-grid">
-              <article class="card" data-card-text="roadmap launch priorities">
-                <span class="tag">Roadmap</span>
-                <h3>Launch Outline</h3>
-                <p class="subtle">
-                  Finalize launch priorities and confirm which milestones fit the next sprint.
-                </p>
-              </article>
-              <article class="card" data-card-text="metrics dashboard weekly trends">
-                <span class="tag">Metrics</span>
-                <h3>Trend Review</h3>
-                <p class="subtle">
-                  Compare weekly dashboard movement and flag the most surprising changes.
-                </p>
-              </article>
-              <article class="card" data-card-text="research interviews notes synthesis">
-                <span class="tag">Research</span>
-                <h3>Interview Notes</h3>
-                <p class="subtle">
-                  Turn raw interviews into themes that the team can use in planning.
-                </p>
-              </article>
-            </div>
+            <div class="cards" id="card-grid"></div>
           </section>
 
           <section class="panel" aria-labelledby="login-heading">
@@ -527,10 +505,7 @@
                 <button id="add-task" type="button">Add Task</button>
               </div>
             </div>
-            <ul id="task-list">
-              <li>Draft weekly summary</li>
-              <li>Confirm release notes</li>
-            </ul>
+            <ul id="task-list"></ul>
           </section>
 
           <section class="panel" aria-labelledby="preferences-heading">
@@ -576,17 +551,10 @@
 
     <dialog id="release-dialog" aria-labelledby="release-dialog-title">
       <div class="dialog-body">
-        <p class="eyebrow">March Release</p>
+        <p class="eyebrow" id="release-month">March Release</p>
         <h2 id="release-dialog-title">Release Notes Summary</h2>
-        <p>
-          The latest update improves card filtering, makes status messages clearer, and adds a
-          local practice flow for browser automation demos.
-        </p>
-        <ul>
-          <li>Search now updates the visible card count immediately.</li>
-          <li>Task creation updates the board without a page refresh.</li>
-          <li>Preference toggles write friendly confirmation text.</li>
-        </ul>
+        <p id="release-summary"></p>
+        <ul id="release-highlights"></ul>
         <div class="actions">
           <button id="close-dialog" type="button">Close Release Notes</button>
         </div>
@@ -594,6 +562,7 @@
     </dialog>
 
     <script>
+      const shell = document.querySelector(".shell");
       const cardSearch = document.getElementById("card-search");
       const searchButton = document.getElementById("search-button");
       const cardGrid = document.getElementById("card-grid");
@@ -601,6 +570,7 @@
       const loginForm = document.getElementById("login-form");
       const resetFormButton = document.getElementById("reset-form");
       const signInStatus = document.getElementById("sign-in-status");
+      const planSelect = document.getElementById("plan");
       const taskInput = document.getElementById("task-input");
       const addTaskButton = document.getElementById("add-task");
       const taskList = document.getElementById("task-list");
@@ -613,11 +583,99 @@
       const openDialogButton = document.getElementById("open-dialog");
       const closeDialogButton = document.getElementById("close-dialog");
       const releaseDialog = document.getElementById("release-dialog");
+      const releaseMonth = document.getElementById("release-month");
+      const releaseDialogTitle = document.getElementById("release-dialog-title");
+      const releaseSummary = document.getElementById("release-summary");
+      const releaseHighlights = document.getElementById("release-highlights");
+
+      async function fetchJson(url, options = {}) {
+        const response = await fetch(url, {
+          headers: {
+            "Content-Type": "application/json",
+            ...(options.headers || {}),
+          },
+          ...options,
+        });
+
+        if (!response.ok) {
+          throw new Error("Request failed: " + response.status + " " + response.statusText);
+        }
+
+        return response.json();
+      }
+
+      function setPracticeReady(isReady) {
+        shell.dataset.practiceReady = isReady ? "true" : "false";
+        shell.setAttribute("aria-busy", isReady ? "false" : "true");
+      }
+
+      function createCardElement(card) {
+        const article = document.createElement("article");
+        article.className = "card";
+        article.dataset.cardText = card.searchableText;
+
+        const tag = document.createElement("span");
+        tag.className = "tag";
+        tag.textContent = card.tag;
+
+        const title = document.createElement("h3");
+        title.textContent = card.title;
+
+        const description = document.createElement("p");
+        description.className = "subtle";
+        description.textContent = card.description;
+
+        article.append(tag, title, description);
+        return article;
+      }
+
+      function renderCards(cards) {
+        cardGrid.replaceChildren(...cards.map(createCardElement));
+        updateVisibleCardCount();
+      }
+
+      function renderPlanOptions(plans) {
+        planSelect.replaceChildren(
+          ...plans.map((plan) => {
+            const option = document.createElement("option");
+            option.textContent = plan;
+            return option;
+          }),
+        );
+      }
+
+      function renderTasks(tasks) {
+        taskList.replaceChildren(
+          ...tasks.map((task) => {
+            const item = document.createElement("li");
+            item.textContent = task;
+            return item;
+          }),
+        );
+        updateTaskCount();
+      }
+
+      function renderReleaseNotes(releaseNotes) {
+        releaseMonth.textContent = releaseNotes.monthLabel;
+        releaseDialogTitle.textContent = releaseNotes.title;
+        releaseSummary.textContent = releaseNotes.summary;
+        releaseHighlights.replaceChildren(
+          ...releaseNotes.bullets.map((bullet) => {
+            const item = document.createElement("li");
+            item.textContent = bullet;
+            return item;
+          }),
+        );
+      }
+
+      function syncPreferences(preferences) {
+        focusMode.checked = preferences.focusMode;
+        dailyDigest.checked = preferences.dailyDigest;
+        autoArchive.checked = preferences.autoArchive;
+      }
 
       function updateVisibleCardCount() {
-        const visibleCards = Array.from(cardGrid.children).filter(
-          (card) => !card.hidden,
-        ).length;
+        const visibleCards = Array.from(cardGrid.children).filter((card) => !card.hidden).length;
         visibleCardCount.textContent = String(visibleCards);
       }
 
@@ -644,6 +702,18 @@
         modeLabel.textContent = focusMode.checked ? "Focus" : "Calm";
       }
 
+      async function loadPracticeState() {
+        const practiceState = await fetchJson("/api/practice-state");
+        renderPlanOptions(practiceState.plans);
+        renderCards(practiceState.cards);
+        renderTasks(practiceState.tasks);
+        syncPreferences(practiceState.preferences);
+        renderReleaseNotes(practiceState.releaseNotes);
+        signInStatus.textContent = practiceState.summary.signInStatus;
+        updatePreferencesStatus();
+        setPracticeReady(true);
+      }
+
       searchButton.addEventListener("click", filterCards);
       cardSearch.addEventListener("keydown", (event) => {
         if (event.key === "Enter") {
@@ -658,8 +728,7 @@
         const email = String(formData.get("email") || "").trim();
         const plan = String(formData.get("plan") || "").trim();
 
-        signInStatus.textContent =
-          "Signed in as " + email + " on the " + plan + " plan.";
+        signInStatus.textContent = "Signed in as " + email + " on the " + plan + " plan.";
       });
 
       resetFormButton.addEventListener("click", () => {
@@ -667,18 +736,20 @@
         signInStatus.textContent = "Form reset. Waiting for sign-in input.";
       });
 
-      addTaskButton.addEventListener("click", () => {
+      addTaskButton.addEventListener("click", async () => {
         const value = taskInput.value.trim();
         if (!value) {
           taskInput.focus();
           return;
         }
 
-        const item = document.createElement("li");
-        item.textContent = value;
-        taskList.appendChild(item);
+        const taskResponse = await fetchJson("/api/tasks", {
+          method: "POST",
+          body: JSON.stringify({ name: value }),
+        });
+
+        renderTasks(taskResponse.tasks);
         taskInput.value = "";
-        updateTaskCount();
       });
 
       [focusMode, dailyDigest, autoArchive].forEach((element) => {
@@ -693,9 +764,11 @@
         releaseDialog.close();
       });
 
-      updateVisibleCardCount();
-      updateTaskCount();
-      updatePreferencesStatus();
+      loadPracticeState().catch((error) => {
+        console.error("Unable to initialize the practice page.", error);
+        signInStatus.textContent = "Unable to load practice data.";
+        setPracticeReady(false);
+      });
     </script>
   </body>
 </html>

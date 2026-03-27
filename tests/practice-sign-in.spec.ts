@@ -1,7 +1,7 @@
 import { expect, test } from "./fixtures/practice.fixture.js";
 
-test.describe("Signal Lab practice page", () => {
-  test("sign-in shows a success message for the configured login plan", async ({
+test.describe("Signal Lab practice page", { tag: ["@forms", "@regression"] }, () => {
+  test("sign-in shows a success message for the configured login plan", { tag: "@smoke" }, async ({
     practicePage,
     loginCredentials,
     reportStep,
@@ -23,17 +23,16 @@ test.describe("Signal Lab practice page", () => {
       );
     });
   });
-});
-
-test("sign-in defaults to the Starter plan when no plan is provided", async ({
-  practicePage,
-}) => {
-  await practicePage.goto();
-  await practicePage.signIn({
-    email: "wrong@example.com",
-    password: "badpassword",
+  test("sign-in defaults to the Starter plan when no plan is provided", async ({
+    practicePage,
+  }) => {
+    await practicePage.goto();
+    await practicePage.signIn({
+      email: "wrong@example.com",
+      password: "badpassword",
+    });
+    await expect(practicePage.signInStatus).toHaveText(
+      "Signed in as wrong@example.com on the Starter plan.",
+    );
   });
-  await expect(practicePage.signInStatus).toHaveText(
-    "Signed in as wrong@example.com on the Starter plan.",
-  );
 });
