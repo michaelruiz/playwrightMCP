@@ -30,7 +30,7 @@
     "format:check": "prettier --check .",
     "report:allure": "allure generate allure-results --clean -o allure-report",
     "report:allure:open": "allure open allure-report",
-    "prepare": "husky"
+    "prepare": "node -e \"if (process.env.CI !== 'true') { const husky = require('husky'); typeof husky === 'function' ? husky() : require('child_process').execSync('husky'); }\""
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.1",
