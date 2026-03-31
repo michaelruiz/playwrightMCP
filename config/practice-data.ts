@@ -1,7 +1,7 @@
-import { PRACTICE_PLAN_VALUES, type PracticePlan } from "./environment.js";
+import { PRACTICE_PLAN_VALUES, type PracticePlan } from './environment.js';
 
-export const PRACTICE_DEFAULT_SIGN_IN_STATUS = "Waiting for sign-in input.";
-export const PRACTICE_RESET_SIGN_IN_STATUS = "Form reset. Waiting for sign-in input.";
+export const PRACTICE_DEFAULT_SIGN_IN_STATUS = 'Waiting for sign-in input.';
+export const PRACTICE_RESET_SIGN_IN_STATUS = 'Form reset. Waiting for sign-in input.';
 
 export interface PracticeCard {
   id: string;
@@ -36,36 +36,36 @@ export interface PracticeState {
 export interface PracticeSummary {
   visibleCards: number;
   taskCount: number;
-  mode: "Calm" | "Focus";
+  mode: 'Calm' | 'Focus';
   preferencesStatus: string;
   signInStatus: string;
 }
 
 const seedCards: PracticeCard[] = [
   {
-    id: "launch-outline",
-    tag: "Roadmap",
-    title: "Launch Outline",
-    description: "Finalize launch priorities and confirm which milestones fit the next sprint.",
-    searchableText: "roadmap launch priorities",
+    id: 'launch-outline',
+    tag: 'Roadmap',
+    title: 'Launch Outline',
+    description: 'Finalize launch priorities and confirm which milestones fit the next sprint.',
+    searchableText: 'roadmap launch priorities',
   },
   {
-    id: "trend-review",
-    tag: "Metrics",
-    title: "Trend Review",
-    description: "Compare weekly dashboard movement and flag the most surprising changes.",
-    searchableText: "metrics dashboard weekly trends",
+    id: 'trend-review',
+    tag: 'Metrics',
+    title: 'Trend Review',
+    description: 'Compare weekly dashboard movement and flag the most surprising changes.',
+    searchableText: 'metrics dashboard weekly trends',
   },
   {
-    id: "interview-notes",
-    tag: "Research",
-    title: "Interview Notes",
-    description: "Turn raw interviews into themes that the team can use in planning.",
-    searchableText: "research interviews notes synthesis",
+    id: 'interview-notes',
+    tag: 'Research',
+    title: 'Interview Notes',
+    description: 'Turn raw interviews into themes that the team can use in planning.',
+    searchableText: 'research interviews notes synthesis',
   },
 ];
 
-const seedTasks = ["Draft weekly summary", "Confirm release notes"];
+const seedTasks = ['Draft weekly summary', 'Confirm release notes'];
 
 const seedPreferences: PracticePreferences = {
   focusMode: false,
@@ -74,14 +74,14 @@ const seedPreferences: PracticePreferences = {
 };
 
 const seedReleaseNotes: PracticeReleaseNotes = {
-  monthLabel: "March Release",
-  title: "Release Notes Summary",
+  monthLabel: 'March Release',
+  title: 'Release Notes Summary',
   summary:
-    "The latest update improves card filtering, makes status messages clearer, and adds a local practice flow for browser automation demos.",
+    'The latest update improves card filtering, makes status messages clearer, and adds a local practice flow for browser automation demos.',
   bullets: [
-    "Search now updates the visible card count immediately.",
-    "Task creation updates the board without a page refresh.",
-    "Preference toggles write friendly confirmation text.",
+    'Search now updates the visible card count immediately.',
+    'Task creation updates the board without a page refresh.',
+    'Preference toggles write friendly confirmation text.',
   ],
 };
 
@@ -100,9 +100,9 @@ export function createPracticeSeedState(): PracticeState {
 }
 
 export function buildPreferencesStatus(preferences: PracticePreferences): string {
-  const focusText = preferences.focusMode ? "on" : "off";
-  const digestText = preferences.dailyDigest ? "enabled" : "disabled";
-  const archiveText = preferences.autoArchive ? "Auto archive is on." : "Auto archive is off.";
+  const focusText = preferences.focusMode ? 'on' : 'off';
+  const digestText = preferences.dailyDigest ? 'enabled' : 'disabled';
+  const archiveText = preferences.autoArchive ? 'Auto archive is on.' : 'Auto archive is off.';
 
   return `Daily digest is ${digestText}. Focus mode is ${focusText}. ${archiveText}`;
 }
@@ -111,7 +111,7 @@ export function buildPracticeSummary(state: PracticeState): PracticeSummary {
   return {
     visibleCards: state.cards.length,
     taskCount: state.tasks.length,
-    mode: state.preferences.focusMode ? "Focus" : "Calm",
+    mode: state.preferences.focusMode ? 'Focus' : 'Calm',
     preferencesStatus: buildPreferencesStatus(state.preferences),
     signInStatus: state.signInStatus,
   };

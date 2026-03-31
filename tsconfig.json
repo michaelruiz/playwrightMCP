@@ -16,10 +16,12 @@
   },
   "include": [
     "playwright.config.ts",
+    "playwright.report-demo.config.ts",
     "config/**/*.ts",
     "pages/**/*.ts",
     "scripts/**/*.ts",
-    "tests/**/*.ts"
+    "tests/**/*.ts",
+    "tests-demo/**/*.ts"
   ],
   "exclude": ["node_modules", "playwright-report", "test-results"]
 }

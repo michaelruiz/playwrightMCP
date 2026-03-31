@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -29,7 +29,7 @@
       body {
         margin: 0;
         min-height: 100vh;
-        font-family: "Avenir Next", "Trebuchet MS", Verdana, sans-serif;
+        font-family: 'Avenir Next', 'Trebuchet MS', Verdana, sans-serif;
         color: var(--ink);
         background:
           radial-gradient(circle at top left, rgba(198, 95, 53, 0.22), transparent 28%),
@@ -39,7 +39,7 @@
 
       body::before,
       body::after {
-        content: "";
+        content: '';
         position: fixed;
         border-radius: 999px;
         filter: blur(6px);
@@ -81,7 +81,7 @@
 
       .hero-copy h1 {
         margin: 0 0 0.5rem;
-        font-family: Baskerville, "Palatino Linotype", Georgia, serif;
+        font-family: Baskerville, 'Palatino Linotype', Georgia, serif;
         font-size: clamp(2.7rem, 5vw, 4.8rem);
         font-weight: 600;
         line-height: 0.94;
@@ -147,7 +147,7 @@
 
       .panel h2 {
         margin: 0 0 0.9rem;
-        font-family: Baskerville, "Palatino Linotype", Georgia, serif;
+        font-family: Baskerville, 'Palatino Linotype', Georgia, serif;
         font-size: 1.6rem;
       }
 
@@ -236,7 +236,9 @@
         color: #fff9f1;
         font-weight: 700;
         letter-spacing: 0.02em;
-        transition: transform 140ms ease, background 140ms ease;
+        transition:
+          transform 140ms ease,
+          background 140ms ease;
       }
 
       button:hover {
@@ -388,9 +390,9 @@
           <p class="eyebrow">Playwright MCP Practice</p>
           <h1>Signal Lab Practice Board</h1>
           <p>
-            This local page is built for browser automation practice. You can filter
-            cards, submit forms, add tasks, toggle settings, and open a dialog without
-            depending on a changing external site.
+            This local page is built for browser automation practice. You can filter cards, submit
+            forms, add tasks, toggle settings, and open a dialog without depending on a changing
+            external site.
           </p>
         </div>
         <div class="hero-stats" aria-label="Quick stats">
@@ -415,8 +417,8 @@
             <p class="eyebrow">Explore</p>
             <h2 id="lab-board-heading">Card Filter</h2>
             <p class="subtle">
-              Search for a keyword like <strong>roadmap</strong>, <strong>metrics</strong>,
-              or <strong>launch</strong> to reduce the visible cards.
+              Search for a keyword like <strong>roadmap</strong>, <strong>metrics</strong>, or
+              <strong>launch</strong> to reduce the visible cards.
             </p>
             <div class="search-row">
               <div>
@@ -474,7 +476,12 @@
                 </div>
                 <div class="full">
                   <label for="notes">Notes</label>
-                  <textarea id="notes" name="notes" rows="3" placeholder="Optional practice text"></textarea>
+                  <textarea
+                    id="notes"
+                    name="notes"
+                    rows="3"
+                    placeholder="Optional practice text"
+                  ></textarea>
                 </div>
               </div>
               <p class="inline-note">
@@ -544,9 +551,7 @@
         </div>
       </section>
 
-      <p class="footer-note">
-        Built as a stable practice page for Playwright MCP exploration.
-      </p>
+      <p class="footer-note">Built as a stable practice page for Playwright MCP exploration.</p>
     </main>
 
     <dialog id="release-dialog" aria-labelledby="release-dialog-title">
@@ -562,67 +567,67 @@
     </dialog>
 
     <script>
-      const shell = document.querySelector(".shell");
-      const cardSearch = document.getElementById("card-search");
-      const searchButton = document.getElementById("search-button");
-      const cardGrid = document.getElementById("card-grid");
-      const visibleCardCount = document.getElementById("visible-card-count");
-      const loginForm = document.getElementById("login-form");
-      const resetFormButton = document.getElementById("reset-form");
-      const signInStatus = document.getElementById("sign-in-status");
-      const planSelect = document.getElementById("plan");
-      const taskInput = document.getElementById("task-input");
-      const addTaskButton = document.getElementById("add-task");
-      const taskList = document.getElementById("task-list");
-      const taskCount = document.getElementById("task-count");
-      const focusMode = document.getElementById("focus-mode");
-      const dailyDigest = document.getElementById("daily-digest");
-      const autoArchive = document.getElementById("auto-archive");
-      const preferencesStatus = document.getElementById("preferences-status");
-      const modeLabel = document.getElementById("mode-label");
-      const openDialogButton = document.getElementById("open-dialog");
-      const closeDialogButton = document.getElementById("close-dialog");
-      const releaseDialog = document.getElementById("release-dialog");
-      const releaseMonth = document.getElementById("release-month");
-      const releaseDialogTitle = document.getElementById("release-dialog-title");
-      const releaseSummary = document.getElementById("release-summary");
-      const releaseHighlights = document.getElementById("release-highlights");
+      const shell = document.querySelector('.shell');
+      const cardSearch = document.getElementById('card-search');
+      const searchButton = document.getElementById('search-button');
+      const cardGrid = document.getElementById('card-grid');
+      const visibleCardCount = document.getElementById('visible-card-count');
+      const loginForm = document.getElementById('login-form');
+      const resetFormButton = document.getElementById('reset-form');
+      const signInStatus = document.getElementById('sign-in-status');
+      const planSelect = document.getElementById('plan');
+      const taskInput = document.getElementById('task-input');
+      const addTaskButton = document.getElementById('add-task');
+      const taskList = document.getElementById('task-list');
+      const taskCount = document.getElementById('task-count');
+      const focusMode = document.getElementById('focus-mode');
+      const dailyDigest = document.getElementById('daily-digest');
+      const autoArchive = document.getElementById('auto-archive');
+      const preferencesStatus = document.getElementById('preferences-status');
+      const modeLabel = document.getElementById('mode-label');
+      const openDialogButton = document.getElementById('open-dialog');
+      const closeDialogButton = document.getElementById('close-dialog');
+      const releaseDialog = document.getElementById('release-dialog');
+      const releaseMonth = document.getElementById('release-month');
+      const releaseDialogTitle = document.getElementById('release-dialog-title');
+      const releaseSummary = document.getElementById('release-summary');
+      const releaseHighlights = document.getElementById('release-highlights');
 
       async function fetchJson(url, options = {}) {
         const response = await fetch(url, {
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
             ...(options.headers || {}),
           },
           ...options,
         });
 
         if (!response.ok) {
-          throw new Error("Request failed: " + response.status + " " + response.statusText);
+          throw new Error('Request failed: ' + response.status + ' ' + response.statusText);
         }
 
         return response.json();
       }
 
       function setPracticeReady(isReady) {
-        shell.dataset.practiceReady = isReady ? "true" : "false";
-        shell.setAttribute("aria-busy", isReady ? "false" : "true");
+        shell.dataset.practiceReady = isReady ? 'true' : 'false';
+        shell.setAttribute('aria-busy', isReady ? 'false' : 'true');
       }
 
       function createCardElement(card) {
-        const article = document.createElement("article");
-        article.className = "card";
+        const article = document.createElement('article');
+        article.className = 'card';
         article.dataset.cardText = card.searchableText;
 
-        const tag = document.createElement("span");
-        tag.className = "tag";
+        const tag = document.createElement('span');
+        tag.className = 'tag';
         tag.textContent = card.tag;
 
-        const title = document.createElement("h3");
+        const title = document.createElement('h3');
         title.textContent = card.title;
 
-        const description = document.createElement("p");
-        description.className = "subtle";
+        const description = document.createElement('p');
+        description.className = 'subtle';
         description.textContent = card.description;
 
         article.append(tag, title, description);
@@ -637,7 +642,7 @@
       function renderPlanOptions(plans) {
         planSelect.replaceChildren(
           ...plans.map((plan) => {
-            const option = document.createElement("option");
+            const option = document.createElement('option');
             option.textContent = plan;
             return option;
           }),
@@ -647,7 +652,7 @@
       function renderTasks(tasks) {
         taskList.replaceChildren(
           ...tasks.map((task) => {
-            const item = document.createElement("li");
+            const item = document.createElement('li');
             item.textContent = task;
             return item;
           }),
@@ -661,7 +666,7 @@
         releaseSummary.textContent = releaseNotes.summary;
         releaseHighlights.replaceChildren(
           ...releaseNotes.bullets.map((bullet) => {
-            const item = document.createElement("li");
+            const item = document.createElement('li');
             item.textContent = bullet;
             return item;
           }),
@@ -682,7 +687,7 @@
       function filterCards() {
         const query = cardSearch.value.trim().toLowerCase();
         Array.from(cardGrid.children).forEach((card) => {
-          const haystack = card.getAttribute("data-card-text") || "";
+          const haystack = card.getAttribute('data-card-text') || '';
           card.hidden = query ? !haystack.includes(query) : false;
         });
         updateVisibleCardCount();
@@ -693,17 +698,17 @@
       }
 
       function updatePreferencesStatus() {
-        const focusText = focusMode.checked ? "on" : "off";
-        const digestText = dailyDigest.checked ? "enabled" : "disabled";
-        const archiveText = autoArchive.checked ? "Auto archive is on." : "Auto archive is off.";
+        const focusText = focusMode.checked ? 'on' : 'off';
+        const digestText = dailyDigest.checked ? 'enabled' : 'disabled';
+        const archiveText = autoArchive.checked ? 'Auto archive is on.' : 'Auto archive is off.';
 
         preferencesStatus.textContent =
-          "Daily digest is " + digestText + ". Focus mode is " + focusText + ". " + archiveText;
-        modeLabel.textContent = focusMode.checked ? "Focus" : "Calm";
+          'Daily digest is ' + digestText + '. Focus mode is ' + focusText + '. ' + archiveText;
+        modeLabel.textContent = focusMode.checked ? 'Focus' : 'Calm';
       }
 
       async function loadPracticeState() {
-        const practiceState = await fetchJson("/api/practice-state");
+        const practiceState = await fetchJson('/api/practice-state');
         renderPlanOptions(practiceState.plans);
         renderCards(practiceState.cards);
         renderTasks(practiceState.tasks);
@@ -714,59 +719,59 @@
         setPracticeReady(true);
       }
 
-      searchButton.addEventListener("click", filterCards);
-      cardSearch.addEventListener("keydown", (event) => {
-        if (event.key === "Enter") {
+      searchButton.addEventListener('click', filterCards);
+      cardSearch.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
           event.preventDefault();
           filterCards();
         }
       });
 
-      loginForm.addEventListener("submit", (event) => {
+      loginForm.addEventListener('submit', (event) => {
         event.preventDefault();
         const formData = new FormData(loginForm);
-        const email = String(formData.get("email") || "").trim();
-        const plan = String(formData.get("plan") || "").trim();
+        const email = String(formData.get('email') || '').trim();
+        const plan = String(formData.get('plan') || '').trim();
 
-        signInStatus.textContent = "Signed in as " + email + " on the " + plan + " plan.";
+        signInStatus.textContent = 'Signed in as ' + email + ' on the ' + plan + ' plan.';
       });
 
-      resetFormButton.addEventListener("click", () => {
+      resetFormButton.addEventListener('click', () => {
         loginForm.reset();
-        signInStatus.textContent = "Form reset. Waiting for sign-in input.";
+        signInStatus.textContent = 'Form reset. Waiting for sign-in input.';
       });
 
-      addTaskButton.addEventListener("click", async () => {
+      addTaskButton.addEventListener('click', async () => {
         const value = taskInput.value.trim();
         if (!value) {
           taskInput.focus();
           return;
         }
 
-        const taskResponse = await fetchJson("/api/tasks", {
-          method: "POST",
+        const taskResponse = await fetchJson('/api/tasks', {
+          method: 'POST',
           body: JSON.stringify({ name: value }),
         });
 
         renderTasks(taskResponse.tasks);
-        taskInput.value = "";
+        taskInput.value = '';
       });
 
       [focusMode, dailyDigest, autoArchive].forEach((element) => {
-        element.addEventListener("change", updatePreferencesStatus);
+        element.addEventListener('change', updatePreferencesStatus);
       });
 
-      openDialogButton.addEventListener("click", () => {
+      openDialogButton.addEventListener('click', () => {
         releaseDialog.showModal();
       });
 
-      closeDialogButton.addEventListener("click", () => {
+      closeDialogButton.addEventListener('click', () => {
         releaseDialog.close();
       });
 
       loadPracticeState().catch((error) => {
-        console.error("Unable to initialize the practice page.", error);
-        signInStatus.textContent = "Unable to load practice data.";
+        console.error('Unable to initialize the practice page.', error);
+        signInStatus.textContent = 'Unable to load practice data.';
         setPracticeReady(false);
       });
     </script>

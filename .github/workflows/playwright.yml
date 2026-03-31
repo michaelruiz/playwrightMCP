@@ -17,7 +17,7 @@ jobs:
       contents: read
     env:
       CI: true
-      PW_CROSS_BROWSER: "1"
+      PW_CROSS_BROWSER: '1'
       PRACTICE_LOGIN_EMAIL: demo@example.com
       PRACTICE_LOGIN_PASSWORD: orbit123
       PRACTICE_LOGIN_PLAN: Team

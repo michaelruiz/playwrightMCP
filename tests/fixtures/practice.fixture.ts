@@ -1,36 +1,45 @@
+import { randomUUID } from 'node:crypto';
+
 import {
+  type APIRequestContext,
   test as base,
   expect,
   type ConsoleMessage,
   type Request,
   type Response,
-} from "@playwright/test";
+} from '@playwright/test';
 
-import { getLoginCredentials, type LoginCredentials } from "../../config/environment.js";
-import { PracticePage, type SignInOptions } from "../../pages/practice-page.js";
+import {
+  getLoginCredentials,
+  getRuntimeSettings,
+  type LoginCredentials,
+} from '../../config/environment.js';
+import { PracticePage, type SignInOptions } from '../../pages/practice-page.js';
 
 export interface PracticeFixtures {
   practicePage: PracticePage;
+  practiceRequest: APIRequestContext;
   loginCredentials: LoginCredentials;
-  signInWithConfiguredCredentials: (
-    overrides?: Partial<SignInOptions>,
-  ) => Promise<void>;
+  signInWithConfiguredCredentials: (overrides?: Partial<SignInOptions>) => Promise<void>;
   reportStep: <T>(title: string, body: () => Promise<T>) => Promise<T>;
 }
 
 type PracticeWorkerFixtures = {
+  practiceSessionId: string;
   captureConsoleOnFailure: void;
   captureNetworkOnFailure: void;
   resetPracticeState: void;
 };
 
+const runtime = getRuntimeSettings();
+
 function slugifyTitle(value: string): string {
   return (
     value
       .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "")
-      .slice(0, 60) || "step"
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 60) || 'step'
   );
 }
 
@@ -38,7 +47,7 @@ function formatConsoleMessage(message: ConsoleMessage): string {
   const location = message.location();
   const locationText = location.url
     ? ` @ ${location.url}:${location.lineNumber}:${location.columnNumber}`
-    : "";
+    : '';
 
   return `[console:${message.type()}] ${message.text()}${locationText}`;
 }
@@ -48,7 +57,7 @@ function formatPageError(error: Error): string {
 }
 
 interface NetworkFailureEntry {
-  kind: "requestfailed" | "http-error";
+  kind: 'requestfailed' | 'http-error';
   method: string;
   url: string;
   status?: number;
@@ -58,6 +67,13 @@ interface NetworkFailureEntry {
 }
 
 export const test = base.extend<PracticeFixtures & PracticeWorkerFixtures>({
+  // Playwright fixtures require destructured args in this position.
+  // eslint-disable-next-line no-empty-pattern
+  practiceSessionId: async ({}, use, testInfo) => {
+    const sessionId = `${testInfo.parallelIndex}-${randomUUID()}`;
+    await use(sessionId);
+  },
+
   captureConsoleOnFailure: [
     async ({ page }, use, testInfo) => {
       const entries: string[] = [];
@@ -68,15 +84,15 @@ export const test = base.extend<PracticeFixtures & PracticeWorkerFixtures>({
         entries.push(formatPageError(error));
       };
 
-      page.on("console", handleConsole);
-      page.on("pageerror", handlePageError);
+      page.on('console', handleConsole);
+      page.on('pageerror', handlePageError);
 
       await use();
 
       if (testInfo.status !== testInfo.expectedStatus && entries.length > 0) {
-        await testInfo.attach("console-output", {
-          body: entries.join("\n"),
-          contentType: "text/plain",
+        await testInfo.attach('console-output', {
+          body: entries.join('\n'),
+          contentType: 'text/plain',
         });
       }
     },
@@ -91,7 +107,7 @@ export const test = base.extend<PracticeFixtures & PracticeWorkerFixtures>({
         const failureText = request.failure()?.errorText;
 
         entries.push({
-          kind: "requestfailed",
+          kind: 'requestfailed',
           method: request.method(),
           url: request.url(),
           resourceType: request.resourceType(),
@@ -106,7 +122,7 @@ export const test = base.extend<PracticeFixtures & PracticeWorkerFixtures>({
 
         const request = response.request();
         entries.push({
-          kind: "http-error",
+          kind: 'http-error',
           method: request.method(),
           url: response.url(),
           status: response.status(),
@@ -115,31 +131,46 @@ export const test = base.extend<PracticeFixtures & PracticeWorkerFixtures>({
         });
       };
 
-      page.on("requestfailed", handleRequestFailed);
-      page.on("response", handleResponse);
+      page.on('requestfailed', handleRequestFailed);
+      page.on('response', handleResponse);
 
       await use();
 
       if (testInfo.status !== testInfo.expectedStatus && entries.length > 0) {
-        await testInfo.attach("network-diagnostics", {
+        await testInfo.attach('network-diagnostics', {
           body: JSON.stringify(entries, null, 2),
-          contentType: "application/json",
+          contentType: 'application/json',
         });
       }
     },
     { auto: true },
   ],
 
+  practiceRequest: async ({ playwright, practiceSessionId }, use) => {
+    const practiceRequest = await playwright.request.newContext({
+      baseURL: runtime.baseURL,
+      extraHTTPHeaders: {
+        'x-practice-session': practiceSessionId,
+      },
+    });
+
+    await use(practiceRequest);
+    await practiceRequest.dispose();
+  },
+
   resetPracticeState: [
-    async ({ request }, use) => {
-      const response = await request.post("/api/test/reset");
+    async ({ practiceRequest }, use) => {
+      const response = await practiceRequest.post('/api/test/reset');
       expect(response.ok()).toBeTruthy();
       await use();
     },
     { auto: true },
   ],
 
-  practicePage: async ({ page, resetPracticeState }, use) => {
+  practicePage: async ({ page, practiceSessionId, resetPracticeState }, use) => {
+    await page.context().setExtraHTTPHeaders({
+      'x-practice-session': practiceSessionId,
+    });
     void resetPracticeState;
     const practicePage = new PracticePage(page);
     await practicePage.goto();
@@ -173,15 +204,15 @@ export const test = base.extend<PracticeFixtures & PracticeWorkerFixtures>({
         } finally {
           if (!page.isClosed()) {
             const screenshot = await page.screenshot({
-              animations: "disabled",
+              animations: 'disabled',
               fullPage: true,
             });
 
             await testInfo.attach(
-              `step-${String(stepIndex).padStart(2, "0")}-${slugifyTitle(title)}`,
+              `step-${String(stepIndex).padStart(2, '0')}-${slugifyTitle(title)}`,
               {
                 body: screenshot,
-                contentType: "image/png",
+                contentType: 'image/png',
               },
             );
           }
@@ -192,18 +223,18 @@ export const test = base.extend<PracticeFixtures & PracticeWorkerFixtures>({
 });
 
 test.afterEach(async ({ page }, testInfo) => {
-  if (testInfo.status === "skipped" || page.isClosed()) {
+  if (testInfo.status === 'skipped' || page.isClosed()) {
     return;
   }
 
   const screenshot = await page.screenshot({
-    animations: "disabled",
+    animations: 'disabled',
     fullPage: true,
   });
 
-  await testInfo.attach("final-page-state", {
+  await testInfo.attach('final-page-state', {
     body: screenshot,
-    contentType: "image/png",
+    contentType: 'image/png',
   });
 });
 

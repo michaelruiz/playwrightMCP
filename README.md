@@ -2,7 +2,6 @@
 
 <img width="1365" height="1024" alt="ChatGPT Image Mar 24, 2026 at 04_25_29 PM" src="https://github.com/user-attachments/assets/6acebfb0-3d01-46b4-b984-43afabcd3542" />
 
-
 Using MCP-driven browser exploration to build structured Playwright tests.
 
 ![Playwright](https://img.shields.io/badge/playwright-automation-blue.svg)
@@ -61,6 +60,7 @@ npm run test:api
 npm run test:a11y
 npm run test:visual
 npm run test:visual:update
+npm run test:report-demo
 npm run test:headed
 npm run test:debug
 ```
@@ -70,6 +70,7 @@ npm run test:debug
 ```bash
 npx playwright show-report
 ```
+
 > If badge shows 404, run `npm test` once and re-open this README or GitHub page.
 
 Generate an Allure report from the latest test run:
@@ -89,11 +90,14 @@ npm run report:allure:open
 - `tests/practice-accessibility.spec.ts`: accessibility checks powered by `axe-core`
 - `tests/practice-visual.spec.ts`: Chromium visual regression coverage
 - `tests/practice-visual.spec.ts-snapshots/`: committed macOS and Linux baseline snapshots for visual assertions
+- `tests-demo/report-demo.failure.spec.ts`: isolated intentional-failure suite for report exploration
 - `config/environment.ts`: runtime environment variables + validation
 - `config/practice-data.ts`: shared practice data and state builders used by UI + API
+- `config/playwright-shared.ts`: shared Playwright config factory used by the production and demo suites
 - `scripts/serve-practice.ts`: local practice server with both static pages and JSON endpoints
 - `scripts/run-playwright.ts`: custom test runner wrapper for local iteration
 - `playwright.config.ts`: vitals for test projects, timeout, server setup
+- `playwright.report-demo.config.ts`: dedicated Playwright config for the report demo suite
 - `.github/workflows/playwright.yml`: CI workflow, PR artifact comments, and GitHub Pages deployment
 - `tsconfig.json`: strict TypeScript config
 
@@ -122,7 +126,7 @@ npm run report:allure:open
 - `@api`: request-level coverage for health, state, and task creation endpoints
 - `@a11y`: axe-powered accessibility audits for the page shell and dialog
 - `@visual`: screenshot-based regression checks for the board and modal
-- `@demo` / `@reporting`: intentional failure coverage for report exploration
+- `@demo` / `@reporting`: intentional failure coverage in the isolated demo suite only
 
 ## Reporting and CI
 
@@ -130,7 +134,7 @@ npm run report:allure:open
 - Failed tests attach step screenshots, a final page screenshot, console diagnostics, network diagnostics, video, and trace data.
 - Pull requests get downloadable artifact links through the `Playwright` GitHub Actions workflow.
 - Pushes to `main` publish the latest HTML report to GitHub Pages automatically.
-
+- The default suite is kept free of intentional skips; the report demo runs only through its dedicated config and command.
 
 ## Add a new test (recommended workflow)
 
@@ -142,6 +146,7 @@ npm run report:allure:open
 4. Confirm `npx playwright show-report` builds and passes.
 
 Suggested flow:
+
 1. Explore the behavior with MCP.
 2. Add or extend a page-object method in `pages/practice-page.ts`.
 3. Decide whether the coverage belongs in `@smoke`, `@regression`, `@api`, `@a11y`, or `@visual`.
@@ -155,12 +160,12 @@ Suggested flow:
 
 ```ts
 await practicePage.signIn({
-  email: "demo@example.com",
-  password: "orbit123",
-  plan: "Team",
+  email: 'demo@example.com',
+  password: 'orbit123',
+  plan: 'Team',
 });
 await expect(practicePage.signInStatus).toHaveText(
-  "Signed in as demo@example.com on the Team plan.",
+  'Signed in as demo@example.com on the Team plan.',
 );
 ```
 
@@ -183,6 +188,7 @@ PW_MOBILE=0
 ```
 
 Load order:
+
 1. Shell env
 2. `.env.local`
 3. `.env`
@@ -200,16 +206,16 @@ Load order:
 ```ts
 await practicePage.goto();
 await practicePage.signIn({
-  email: "demo@example.com",
-  password: "orbit123",
-  plan: "Team",
+  email: 'demo@example.com',
+  password: 'orbit123',
+  plan: 'Team',
 });
 await expect(practicePage.signInStatus).toHaveText(
-  "Signed in as demo@example.com on the Team plan.",
+  'Signed in as demo@example.com on the Team plan.',
 );
-await practicePage.addTask("Ship notes");
-await expect(practicePage.taskCount).toHaveText("3");
-``` 
+await practicePage.addTask('Ship notes');
+await expect(practicePage.taskCount).toHaveText('3');
+```
 
 ## Scripts
 
@@ -221,6 +227,7 @@ await expect(practicePage.taskCount).toHaveText("3");
 - `npm run test:a11y`: run Chromium accessibility checks
 - `npm run test:visual`: verify committed visual baselines
 - `npm run test:visual:update`: update visual baselines intentionally
+- `npm run test:report-demo`: run the isolated intentional-failure report demo
 - `npm run lint`: run the ESLint 9 flat-config lint pass
 - `npm run lint:fix`: apply ESLint auto-fixes
 - `npm run typecheck`: TS type check
@@ -244,4 +251,5 @@ await expect(practicePage.taskCount).toHaveText("3");
 4. Open PR
 
 ## License
+
 MIT

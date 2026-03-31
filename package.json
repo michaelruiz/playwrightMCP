@@ -19,7 +19,7 @@
     "test:a11y": "playwright test --project=chromium --grep @a11y",
     "test:visual": "playwright test --project=chromium --grep @visual",
     "test:visual:update": "playwright test --project=chromium --grep @visual --update-snapshots",
-    "test:report-demo": "tsx scripts/run-playwright.ts --report-demo tests/report-demo.failure.spec.ts",
+    "test:report-demo": "playwright test --config=playwright.report-demo.config.ts",
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui",
     "test:debug": "playwright test --debug",
@@ -29,7 +29,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "report:allure": "allure generate allure-results --clean -o allure-report",
-    "report:allure:open": "allure open allure-report"
+    "report:allure:open": "allure open allure-report",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.1",
