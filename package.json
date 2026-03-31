@@ -13,7 +13,13 @@
     "test:cross-browser": "tsx scripts/run-playwright.ts --cross-browser",
     "test:mobile": "tsx scripts/run-playwright.ts --mobile",
     "test:all": "tsx scripts/run-playwright.ts --cross-browser --mobile",
-    "test:report-demo": "tsx scripts/run-playwright.ts --report-demo tests/report-demo.failure.spec.ts",
+    "test:smoke": "playwright test --grep @smoke",
+    "test:regression": "playwright test --grep @regression",
+    "test:api": "playwright test --grep @api",
+    "test:a11y": "playwright test --project=chromium --grep @a11y",
+    "test:visual": "playwright test --project=chromium --grep @visual",
+    "test:visual:update": "playwright test --project=chromium --grep @visual --update-snapshots",
+    "test:report-demo": "playwright test --config=playwright.report-demo.config.ts",
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui",
     "test:debug": "playwright test --debug",
@@ -23,9 +29,11 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "report:allure": "allure generate allure-results --clean -o allure-report",
-    "report:allure:open": "allure open allure-report"
+    "report:allure:open": "allure open allure-report",
+    "prepare": "node -e \"if (process.env.CI !== 'true') { const husky = require('husky'); typeof husky === 'function' ? husky() : require('child_process').execSync('husky'); }\""
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.1",
     "@eslint/js": "^9.36.0",
     "@playwright/test": "1.58.2",
     "@types/node": "24.5.2",
